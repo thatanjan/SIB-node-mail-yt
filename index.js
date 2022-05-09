@@ -1,13 +1,15 @@
-const SibApiV3Sdk = require('sib-api-v3-sdk')
-const defaultClient = SibApiV3Sdk.ApiClient.instance
+const Sib = require('sib-api-v3-sdk')
 
 require('dotenv').config()
 
-const apiKey = defaultClient.authentications['api-key']
+const client = Sib.ApiClient.instance
+
+const apiKey = client.authentications['api-key']
 apiKey.apiKey = process.env.API_KEY
 
 const sender = {
 	email: 'thatanjan@gmail.com',
+	// name: 'Anjan Shomodder',
 }
 
 const recivers = [
@@ -16,17 +18,20 @@ const recivers = [
 	},
 ]
 
-const transactionalEmailApi = new SibApiV3Sdk.TransactionalEmailsApi()
+const transactionalEmailApi = new Sib.TransactionalEmailsApi()
 
 transactionalEmailApi
 	.sendTransacEmail({
-		subject: 'Interested in applying to Frontend Developer',
+		subject: 'Subscribe to Cules Coding to become a developer',
 		sender,
 		to: recivers,
-		textContent: `I would like to apply to be a Frontend Developer. Please contact me.`,
-		templateId: 2,
+		// textContent: `Cules Coding will teach you how to become a {{params.role}} developer.`,
+		htmlContent: `
+			<h1>Become a {{params.role}} developer</h1>
+			<a href='https://cules-coding.vercel.app/'>Cules Coding</a>
+		`,
 		params: {
-			contact: { FIRSTNAME: 'Anjan' },
+			role: 'frontend',
 		},
 	})
 	.then(console.log)
